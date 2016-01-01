@@ -1,10 +1,9 @@
 package com.fredaas.game.android;
 
-import android.os.Bundle;
-
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.fredaas.game.Game;
+import android.os.Bundle;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override

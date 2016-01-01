@@ -27,7 +27,6 @@ public class Player extends FloatingObject {
 
     @Override
     public void update(float dt) {
-        System.out.println(body.getPosition().x + " " + body.getPosition().y);
     }
 
     @Override

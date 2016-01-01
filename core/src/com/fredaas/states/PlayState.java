@@ -25,7 +25,6 @@ public class PlayState extends GameState {
         Box2D.init();
         world = new World(new Vector2(0, 0), true);
         dr = new Box2DDebugRenderer();
-        System.out.println("yes");
         player = new Player(Game.WIDTH / 2, Game.HEIGHT / 2);
     }
 

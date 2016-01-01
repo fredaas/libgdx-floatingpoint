@@ -5,8 +5,12 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.fredaas.game.Game;
 
 public class DesktopLauncher {
+    
 	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new Game(), config);
+		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
+		cfg.width = 480;
+		cfg.height = 640;
+		new LwjglApplication(new Game(), cfg);
 	}
+	
 }

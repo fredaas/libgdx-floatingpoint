@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="32" tileheight="32" nextobjectid="3">
+ <objectgroup name="collision">
+  <object id="1" x="122" y="904">
+   <polyline points="0,0 96,106 278,178 516,144 800,184 1046,170 1178,104 1350,-18 1410,-200 1400,-432 0,-372 0,-2"/>
+  </object>
+ </objectgroup>
+</map>

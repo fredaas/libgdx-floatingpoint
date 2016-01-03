@@ -1,17 +1,25 @@
 package com.fredaas.entities;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.fredaas.states.PlayState;
 import static com.fredaas.handlers.Vars.PPM;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.fredaas.handlers.TouchProcessor;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.World;
 
 public class Player extends FloatingObject {
     
-    public Player(float x, float y) {
+    private float dx;
+    private float dy;
+    private float speed;
+    
+    public Player(float x, float y, World world) {
         super();
         this.x = x / PPM;
         this.y = y / PPM;
+        this.world = world;
         init();
     }
     
@@ -21,12 +29,45 @@ public class Player extends FloatingObject {
         CircleShape cs = new CircleShape();
         cs.setRadius(20 / PPM);
         fdef.shape = cs;
-        body = PlayState.world.createBody(bdef);
+        body = world.createBody(bdef);
         body.createFixture(fdef);
+        dx = 0;
+        dy = 0;
+        speed = 0.4f;
+    }
+    
+    public void setBodyMovement() {
+        setVelocity(getTouchAngle() + MathUtils.PI);
+        body.setLinearVelocity(dx, dy);
+    }
+    
+    
+    private void setVelocity(float angle) {
+        dx += speed * MathUtils.cos(angle);
+        dy += speed * MathUtils.sin(angle);
+    }
+    
+    private void setInertia() {
+        dx *= 0.95;
+        dy *= 0.95;
+        dx = Math.abs(dx) < 0.1 ? 0 : dx;
+        dy = Math.abs(dy) < 0.1 ? 0 : dy;
+        body.setLinearVelocity(dx, dy);   
+    }
+    
+    private float getTouchAngle() {
+        float deltaX = TouchProcessor.getWorldCoord().x - body.getPosition().x;
+        float deltaY = TouchProcessor.getWorldCoord().y - body.getPosition().y;
+        return (float) Math.atan2(deltaY, deltaX);
+    }
+    
+    public Vector2 getPosition() {
+        return body.getPosition();
     }
 
     @Override
     public void update(float dt) {
+        setInertia();
     }
 
     @Override

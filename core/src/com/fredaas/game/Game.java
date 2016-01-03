@@ -1,19 +1,20 @@
 package com.fredaas.game;
 
+import static com.fredaas.handlers.Vars.PPM;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.fredaas.handlers.GameStateManager;
-import static com.fredaas.handlers.Vars.PPM;
+import com.fredaas.handlers.MyInputProcessor;
 
 public class Game implements ApplicationListener {
 	
     private GameStateManager gsm;
+    private ShapeRenderer sr;
     public static int WIDTH;
     public static int HEIGHT;
-    private ShapeRenderer sr;
     public static OrthographicCamera cam;
     public static OrthographicCamera hudCam;
     public static OrthographicCamera b2dCam;
@@ -22,6 +23,7 @@ public class Game implements ApplicationListener {
 	public void create () {
 	    WIDTH = Gdx.graphics.getWidth();
 	    HEIGHT = Gdx.graphics.getHeight();
+	    Gdx.input.setInputProcessor(new MyInputProcessor());
 	    cam = new OrthographicCamera();
 	    cam.setToOrtho(false, WIDTH, HEIGHT);
 	    hudCam = new OrthographicCamera();

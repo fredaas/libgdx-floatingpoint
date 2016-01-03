@@ -10,16 +10,19 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.fredaas.entities.Goal;
 import com.fredaas.entities.Player;
 import com.fredaas.game.Game;
 import com.fredaas.handlers.B2DObjectProcessor;
 import com.fredaas.handlers.GameStateManager;
+import com.fredaas.handlers.MyContactListener;
 import com.fredaas.handlers.TouchProcessor;
 
 public class PlayState extends GameState {
 
     private Box2DDebugRenderer dr;
     private Player player;
+    private Goal goal;
     private TiledMap tm;
     private TiledMapRenderer tr;
     private B2DObjectProcessor op;
@@ -34,22 +37,33 @@ public class PlayState extends GameState {
     protected void init() {
         Box2D.init();
         world = new World(new Vector2(0, 0), true);
+        world.setContactListener(new MyContactListener());
         dr = new Box2DDebugRenderer();
         tm = new TmxMapLoader().load("maps/map.tmx");
         tr = new OrthogonalTiledMapRenderer(tm);
         op = new B2DObjectProcessor(tm, world);
         op.loadObjects();
         player = new Player(Game.WIDTH / 2, Game.HEIGHT / 2, world);
+        goal = new Goal(20, 20, world);
     }
     
     @Override
     public void update(float dt) {
         TouchProcessor.update();
-        if (TouchProcessor.isTouching()) { 
-            player.setBodyMovement();
+        
+        if (!player.isReady()) {
+            if (TouchProcessor.isTouching()) { 
+                player.setBodyMovement();
+            }
+            if (MyContactListener.isGoalReached()) {
+                player.setState(true);
+                player.stopBodyMovement();
+                player.setPosition(goal.getPosition().x, goal.getPosition().y);
+            }
         }
         
         player.update(dt);
+        goal.update(dt);
         
         Game.cam.position.set(
                 player.getPosition().x * PPM, 
@@ -69,6 +83,7 @@ public class PlayState extends GameState {
     @Override
     public void draw(ShapeRenderer sr) {
         player.draw(sr);
+        goal.draw(sr);
     }
     
 }

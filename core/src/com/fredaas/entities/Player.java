@@ -3,7 +3,6 @@ package com.fredaas.entities;
 import static com.fredaas.handlers.Vars.PPM;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.fredaas.handlers.TouchProcessor;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -14,6 +13,7 @@ public class Player extends FloatingObject {
     private float dx;
     private float dy;
     private float speed;
+    private boolean ready;
     
     public Player(float x, float y, World world) {
         super();
@@ -24,6 +24,11 @@ public class Player extends FloatingObject {
     }
     
     private void init() {
+        dx = 0;
+        dy = 0;
+        speed = 0.4f;
+        
+        // Body
         bdef.position.set(x, y);
         bdef.type = BodyType.DynamicBody;
         CircleShape cs = new CircleShape();
@@ -31,18 +36,31 @@ public class Player extends FloatingObject {
         fdef.shape = cs;
         body = world.createBody(bdef);
         body.createFixture(fdef);
-        dx = 0;
-        dy = 0;
-        speed = 0.4f;
+        
+        // Sensor
+        cs.setRadius(5 / PPM);
+        fdef.isSensor = true;
+        body.createFixture(fdef).setUserData("player");
+    }
+    
+    public boolean isReady() {
+        return ready;
+    }
+    
+    public void setState(boolean b) {
+        ready = b;
     }
     
     public void setBodyMovement() {
-        setVelocity(getTouchAngle() + MathUtils.PI);
-        body.setLinearVelocity(dx, dy);
+        setDirection(getTouchAngle() + MathUtils.PI);
     }
     
+    public void stopBodyMovement() {
+        dx = 0;
+        dy = 0;
+    }
     
-    private void setVelocity(float angle) {
+    private void setDirection(float angle) {
         dx += speed * MathUtils.cos(angle);
         dy += speed * MathUtils.sin(angle);
     }
@@ -52,7 +70,6 @@ public class Player extends FloatingObject {
         dy *= 0.95;
         dx = Math.abs(dx) < 0.1 ? 0 : dx;
         dy = Math.abs(dy) < 0.1 ? 0 : dy;
-        body.setLinearVelocity(dx, dy);   
     }
     
     private float getTouchAngle() {
@@ -61,13 +78,14 @@ public class Player extends FloatingObject {
         return (float) Math.atan2(deltaY, deltaX);
     }
     
-    public Vector2 getPosition() {
-        return body.getPosition();
+    public void setPosition(float x, float y) {
+        body.setTransform(x, y, 0);
     }
-
+    
     @Override
     public void update(float dt) {
         setInertia();
+        body.setLinearVelocity(dx, dy);
     }
 
     @Override

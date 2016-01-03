@@ -1,6 +1,7 @@
 package com.fredaas.entities;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -26,5 +27,8 @@ public abstract class FloatingObject {
     
     public abstract void update(float dt);
     public abstract void draw(ShapeRenderer sr);
+    public Vector2 getPosition() {
+        return body.getPosition();
+    }
     
 }

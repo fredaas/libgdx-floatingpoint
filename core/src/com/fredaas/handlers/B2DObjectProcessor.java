@@ -42,6 +42,9 @@ public class B2DObjectProcessor {
     
     public void loadObjects() {
         for (MapLayer layer : tm.getLayers()) {
+            if (layer.getProperties().get("ignore") != null) {
+                continue;
+            }
             for (MapObject obj : layer.getObjects()) {
                 if (obj instanceof RectangleMapObject) {
                     createBody(getRectangleShape((RectangleMapObject) obj));

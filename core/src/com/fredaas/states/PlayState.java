@@ -2,6 +2,8 @@ package com.fredaas.states;
 
 import static com.fredaas.handlers.Vars.PPM;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.EllipseMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -43,8 +45,30 @@ public class PlayState extends GameState {
         tr = new OrthogonalTiledMapRenderer(tm);
         op = new B2DObjectProcessor(tm, world);
         op.loadObjects();
-        player = new Player(Game.WIDTH / 2, Game.HEIGHT / 2, world);
-        goal = new Goal(20, 20, world);
+        createEntities();
+    }
+    
+    private void createEntities() {
+        for (MapObject obj : tm.getLayers().get("player").getObjects()) {
+            createPlayer((EllipseMapObject) obj);
+        }
+        for (MapObject obj : tm.getLayers().get("goal").getObjects()) {
+            createGoal((EllipseMapObject) obj);
+        }
+    }
+    
+    private void createPlayer(EllipseMapObject obj) {
+        player = new Player(
+                obj.getEllipse().x, 
+                obj.getEllipse().y, 
+                world);
+    }
+    
+    private void createGoal(EllipseMapObject obj) {
+        goal = new Goal(
+                obj.getEllipse().x, 
+                obj.getEllipse().y, 
+                world);
     }
     
     @Override

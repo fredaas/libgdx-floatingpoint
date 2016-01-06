@@ -21,6 +21,7 @@ public class Game implements ApplicationListener {
     
 	@Override
 	public void create () {
+	    sr = new ShapeRenderer();
 	    WIDTH = Gdx.graphics.getWidth();
 	    HEIGHT = Gdx.graphics.getHeight();
 	    Gdx.input.setInputProcessor(new MyInputProcessor());
@@ -37,8 +38,7 @@ public class Game implements ApplicationListener {
 	public void render () {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		gsm.update(Gdx.graphics.getDeltaTime());
-		gsm.draw(sr);
+		gsm.render(Gdx.graphics.getDeltaTime(), sr);
 	}
 
     @Override

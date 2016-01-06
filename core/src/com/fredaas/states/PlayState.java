@@ -17,6 +17,7 @@ import com.fredaas.entities.Player;
 import com.fredaas.game.Game;
 import com.fredaas.handlers.B2DObjectProcessor;
 import com.fredaas.handlers.GameStateManager;
+import com.fredaas.handlers.GameStateManager.State;
 import com.fredaas.handlers.MyContactListener;
 import com.fredaas.handlers.TouchProcessor;
 
@@ -81,8 +82,9 @@ public class PlayState extends GameState {
             }
             if (MyContactListener.isGoalReached()) {
                 player.setState(true);
-                player.stopBodyMovement();
                 player.setPosition(goal.getPosition().x, goal.getPosition().y);
+                player.stopBodyMovement();
+                gsm.loadState(State.MENU);
             }
         }
         

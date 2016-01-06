@@ -47,8 +47,8 @@ public class Player extends FloatingObject {
         return ready;
     }
     
-    public void setState(boolean b) {
-        ready = b;
+    public void setState(boolean ready) {
+        this.ready = ready;
     }
     
     public void setBodyMovement() {

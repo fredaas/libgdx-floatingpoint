@@ -30,7 +30,7 @@ public class TransitionState {
         x = 0;
         y = 0;
         step = 0.1f;
-        color = new Color(0, 1, 0, 0);
+        color = new Color(0, 0, 0, 0);
     }
     
     private void transitionIn() {

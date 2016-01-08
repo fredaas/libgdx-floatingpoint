@@ -1,6 +1,8 @@
 package com.fredaas.states;
 
 import static com.fredaas.handlers.Vars.PPM;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
@@ -30,6 +32,10 @@ public class PlayState extends GameState {
     private TiledMapRenderer tr;
     private B2DObjectProcessor op;
     private World world;
+    private double timer;
+    private double timerDiff;
+    private double timerDelay;
+    private boolean debug;
     
     public PlayState(GameStateManager gsm) {
         super(gsm);
@@ -47,6 +53,14 @@ public class PlayState extends GameState {
         op = new B2DObjectProcessor(tm, world);
         op.loadObjects();
         createEntities();
+        setVariables();
+    }
+    
+    private void setVariables() {
+        timer = 0;
+        timerDiff = 0;
+        timerDelay = 5000;
+        debug = true;
     }
     
     private void createEntities() {
@@ -72,25 +86,7 @@ public class PlayState extends GameState {
                 world);
     }
     
-    @Override
-    public void update(float dt) {
-        TouchProcessor.update();
-        
-        if (!player.isReady()) {
-            if (TouchProcessor.isTouching()) { 
-                player.setBodyMovement();
-            }
-            if (MyContactListener.isGoalReached()) {
-                player.setState(true);
-                player.setPosition(goal.getPosition().x, goal.getPosition().y);
-                player.stopBodyMovement();
-                gsm.loadState(State.MENU);
-            }
-        }
-        
-        player.update(dt);
-        goal.update(dt);
-        
+    private void handleCameras() {
         Game.cam.position.set(
                 player.getPosition().x * PPM, 
                 player.getPosition().y * PPM, 0);
@@ -99,10 +95,61 @@ public class PlayState extends GameState {
                 player.getPosition().y, 0);
         Game.cam.update();
         Game.b2dCam.update();
+    }
+    
+    private void disposePlayer() {
+        player.setReady(true);
+        player.setPosition(goal.getPosition().x, goal.getPosition().y);
+        player.stopBodyMovement();
+        world.destroyBody(player.getBody());
+        timer = System.nanoTime();
+    }
+    
+    private void handlePlayerMovement() {
+        player.setBodyMovement();
+    }
+    
+    private void loadNewState() {
+        timerDiff = (System.nanoTime() - timer) / 1000000;
+        if (timerDiff > timerDelay) {
+            player.setReady(false);
+            gsm.loadState(State.MENU);
+        }
+    }
+    
+    private void handleDebugger() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            debug = !debug;
+        }
+        if (debug) {
+            dr.render(world, Game.b2dCam.combined);
+        }
+    }
+    
+    @Override
+    public void update(float dt) {
+        TouchProcessor.update();
+        
+        if (!player.isReady()) {
+            if (TouchProcessor.isTouching()) { 
+                handlePlayerMovement();
+            }
+            if (MyContactListener.isGoalReached()) {
+                disposePlayer();
+            }
+        }
+        else if (player.isReady()) {
+            loadNewState();
+        }
+        
+        player.update(dt);
+        goal.update(dt);
+        
+        handleCameras();
+        handleDebugger();
         
         tr.setView(Game.cam);
         tr.render();
-        dr.render(world, Game.b2dCam.combined);
         world.step(1 / 60f, 6, 2);
     }
 

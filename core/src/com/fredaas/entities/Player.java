@@ -3,10 +3,11 @@ package com.fredaas.entities;
 import static com.fredaas.handlers.Vars.PPM;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.fredaas.handlers.TouchProcessor;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.fredaas.handlers.TouchProcessor;
 
 public class Player extends FloatingObject {
     
@@ -47,7 +48,7 @@ public class Player extends FloatingObject {
         return ready;
     }
     
-    public void setState(boolean ready) {
+    public void setReady(boolean ready) {
         this.ready = ready;
     }
     
@@ -80,6 +81,10 @@ public class Player extends FloatingObject {
     
     public void setPosition(float x, float y) {
         body.setTransform(x, y, 0);
+    }
+    
+    public Body getBody() {
+        return body;
     }
     
     @Override

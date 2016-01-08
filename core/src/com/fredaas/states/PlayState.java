@@ -59,7 +59,7 @@ public class PlayState extends GameState {
     private void setVariables() {
         timer = 0;
         timerDiff = 0;
-        timerDelay = 5000;
+        timerDelay = 1000;
         debug = true;
     }
     

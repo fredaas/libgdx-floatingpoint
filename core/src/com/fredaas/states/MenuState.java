@@ -28,7 +28,6 @@ public class MenuState extends GameState {
         sb = new SpriteBatch();
         gl = new GlyphLayout();
         bmf = loadFont("fonts/bmf.ttf", 42);
-        
     }
     
     /*
@@ -46,7 +45,7 @@ public class MenuState extends GameState {
 
     @Override
     public void update(float dt) {
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             gsm.loadState(State.PLAY);
         }
     }

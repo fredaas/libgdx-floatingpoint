@@ -3,7 +3,6 @@ package com.fredaas.entities;
 import static com.fredaas.handlers.Vars.PPM;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -11,9 +10,6 @@ import com.fredaas.handlers.TouchProcessor;
 
 public class Player extends FloatingObject {
     
-    private float dx;
-    private float dy;
-    private float speed;
     private boolean ready;
     
     public Player(float x, float y, World world) {
@@ -27,7 +23,7 @@ public class Player extends FloatingObject {
     private void init() {
         dx = 0;
         dy = 0;
-        speed = 0.4f;
+        speed = 50 / PPM;
         
         // Body
         bdef.position.set(x, y);
@@ -36,12 +32,12 @@ public class Player extends FloatingObject {
         cs.setRadius(20 / PPM);
         fdef.shape = cs;
         body = world.createBody(bdef);
-        body.createFixture(fdef);
+        body.createFixture(fdef).setUserData("player-body");
         
         // Sensor
         cs.setRadius(5 / PPM);
         fdef.isSensor = true;
-        body.createFixture(fdef).setUserData("player");
+        body.createFixture(fdef).setUserData("player-sensor");
     }
     
     public boolean isReady() {
@@ -54,11 +50,6 @@ public class Player extends FloatingObject {
     
     public void setBodyMovement() {
         setDirection(getTouchAngle() + MathUtils.PI);
-    }
-    
-    public void stopBodyMovement() {
-        dx = 0;
-        dy = 0;
     }
     
     private void setDirection(float angle) {
@@ -80,11 +71,8 @@ public class Player extends FloatingObject {
     }
     
     public void setPosition(float x, float y) {
-        body.setTransform(x, y, 0);
-    }
-    
-    public Body getBody() {
-        return body;
+        this.x = x;
+        this.y = y;
     }
     
     @Override

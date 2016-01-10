@@ -1,6 +1,7 @@
 package com.fredaas.states;
 
 import static com.fredaas.handlers.Vars.PPM;
+import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.fredaas.entities.Goal;
+import com.fredaas.entities.MovingBlock;
 import com.fredaas.entities.Player;
 import com.fredaas.game.Game;
 import com.fredaas.handlers.B2DObjectProcessor;
@@ -28,6 +30,7 @@ public class PlayState extends GameState {
     private Box2DDebugRenderer dr;
     private Player player;
     private Goal goal;
+    private ArrayList<MovingBlock> blocks;
     private TiledMap tm;
     private TiledMapRenderer tr;
     private B2DObjectProcessor op;
@@ -52,6 +55,7 @@ public class PlayState extends GameState {
         tr = new OrthogonalTiledMapRenderer(tm);
         op = new B2DObjectProcessor(tm, world);
         op.loadObjects();
+        blocks = new ArrayList<MovingBlock>();
         createEntities();
         setVariables();
     }
@@ -70,6 +74,9 @@ public class PlayState extends GameState {
         for (MapObject obj : tm.getLayers().get("goal").getObjects()) {
             createGoal((EllipseMapObject) obj);
         }
+        for (MapObject obj : tm.getLayers().get("moving-blocks").getObjects()) {
+            createObstacles((EllipseMapObject) obj);
+        }
     }
     
     private void createPlayer(EllipseMapObject obj) {
@@ -86,6 +93,13 @@ public class PlayState extends GameState {
                 world);
     }
     
+    private void createObstacles(EllipseMapObject obj) {
+        blocks.add(new MovingBlock(
+                obj.getEllipse().x,
+                obj.getEllipse().y,
+                world));
+    }
+    
     private void handleCameras() {
         Game.cam.position.set(
                 player.getPosition().x * PPM, 
@@ -97,23 +111,28 @@ public class PlayState extends GameState {
         Game.b2dCam.update();
     }
     
-    private void disposePlayer() {
+    private void preparePlayer() {
         player.setReady(true);
-        player.setPosition(goal.getPosition().x, goal.getPosition().y);
-        player.stopBodyMovement();
         world.destroyBody(player.getBody());
         timer = System.nanoTime();
     }
     
-    private void handlePlayerMovement() {
-        player.setBodyMovement();
+    private void disposeBodies() {
+        for (MovingBlock block : blocks) {
+            world.destroyBody(block.getBody());
+        }
+    }
+    
+    private boolean updateTimer() {
+        timerDiff = (System.nanoTime() - timer) / 1000000;
+        return timerDiff > timerDelay;
     }
     
     private void loadNewState() {
-        timerDiff = (System.nanoTime() - timer) / 1000000;
-        if (timerDiff > timerDelay) {
+        if (updateTimer()) {
             player.setReady(false);
             gsm.loadState(State.MENU);
+            disposeBodies();
         }
     }
     
@@ -132,14 +151,19 @@ public class PlayState extends GameState {
         
         if (!player.isReady()) {
             if (TouchProcessor.isTouching()) { 
-                handlePlayerMovement();
+                player.setBodyMovement();
             }
-            if (MyContactListener.isGoalReached()) {
-                disposePlayer();
+            if (MyContactListener.isGoalReached() || 
+                    MyContactListener.isPlayerDead()) {
+                preparePlayer();
             }
         }
         else if (player.isReady()) {
             loadNewState();
+        }
+        
+        for (MovingBlock block : blocks) {
+            block.update(dt);
         }
         
         player.update(dt);
@@ -155,6 +179,10 @@ public class PlayState extends GameState {
 
     @Override
     public void draw(ShapeRenderer sr) {
+        for (MovingBlock block : blocks) {
+            block.draw(sr);
+        }
+        
         player.draw(sr);
         goal.draw(sr);
     }

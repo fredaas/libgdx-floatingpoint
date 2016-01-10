@@ -29,7 +29,7 @@ public class Goal extends FloatingObject {
         
         // Sensor
         cs.setRadius(5 / PPM);
-        body.createFixture(fdef).setUserData("goal");
+        body.createFixture(fdef).setUserData("goal-sensor");
     }
     
     @Override

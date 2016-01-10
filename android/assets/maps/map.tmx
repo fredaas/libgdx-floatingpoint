@@ -1,27 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="32" tileheight="32" nextobjectid="5">
- <objectgroup name="collision">
-  <object id="1" x="122" y="904">
-   <polyline points="0,0 96,106 278,178 516,144 800,184 1046,170 1178,104 1350,-18 1410,-200 1400,-432 0,-372 0,-2"/>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="32" tileheight="32" nextobjectid="55">
+ <objectgroup name="goal">
+  <properties>
+   <property name="ignore" value=""/>
+  </properties>
+  <object id="4" x="1239.33" y="472" width="18" height="18">
+   <properties>
+    <property name="ignore" value=""/>
+   </properties>
+   <ellipse/>
+  </object>
+ </objectgroup>
+ <objectgroup name="moving-blocks">
+  <properties>
+   <property name="ignore" value=""/>
+  </properties>
+  <object id="47" x="768" y="544" width="14" height="14">
+   <properties>
+    <property name="ignore" value=""/>
+   </properties>
+   <ellipse/>
   </object>
  </objectgroup>
  <objectgroup name="player">
   <properties>
    <property name="ignore" value=""/>
   </properties>
-  <object id="3" x="1437" y="640.667" width="18" height="18">
+  <object id="54" x="1224" y="557" width="19" height="19">
    <ellipse/>
   </object>
  </objectgroup>
- <objectgroup name="goal">
-  <properties>
-   <property name="ignore" value=""/>
-  </properties>
-  <object id="4" x="1446" y="520" width="18" height="18">
-   <properties>
-    <property name="ignore" value=""/>
-   </properties>
-   <ellipse/>
+ <objectgroup name="collision">
+  <object id="7" x="381.333" y="446.667">
+   <polyline points="0,0 290.667,1.33333 290.667,65.3333 738.667,65.3333 738.667,-30.6667 930.667,-30.6667 930.667,225.333 738.667,225.333 738.667,161.333 290.667,161.333 290.667,321.333 -29.3333,321.333 -29.3333,1.33333 2.66667,1.33333"/>
   </object>
  </objectgroup>
 </map>

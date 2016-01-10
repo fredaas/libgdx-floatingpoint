@@ -47,16 +47,16 @@ public class B2DObjectProcessor {
             }
             for (MapObject obj : layer.getObjects()) {
                 if (obj instanceof RectangleMapObject) {
-                    createBody(getRectangleShape((RectangleMapObject) obj));
+                    createBody(getRectangleShape((RectangleMapObject) obj), layer.getName());
                 }
                 else if (obj instanceof EllipseMapObject) {
-                    createBody(getCircleShape((EllipseMapObject) obj));
+                    createBody(getCircleShape((EllipseMapObject) obj), layer.getName());
                 }
                 else if (obj instanceof PolylineMapObject) {
-                    createBody(getChainShape((PolylineMapObject) obj));
+                    createBody(getChainShape((PolylineMapObject) obj), layer.getName());
                 }
                 else if (obj instanceof PolygonMapObject) {
-                    createBody(getPolygonShape((PolygonMapObject) obj));
+                    createBody(getPolygonShape((PolygonMapObject) obj), layer.getName());
                 }
             }
         }
@@ -99,11 +99,6 @@ public class B2DObjectProcessor {
     private void setBodyAttributes(Shape shape) {
         bdef.type = BodyType.StaticBody;
         fdef.shape = shape;
-    }
-    
-    private void createBody(Shape shape) {
-        setBodyAttributes(shape);
-        world.createBody(bdef).createFixture(fdef);
     }
     
     private void createBody(Shape shape, String id) {

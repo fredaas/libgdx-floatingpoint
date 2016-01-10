@@ -11,6 +11,9 @@ public abstract class FloatingObject {
 
     protected float x;
     protected float y;
+    protected float dx;
+    protected float dy;
+    protected float speed;
     protected BodyDef bdef;
     protected FixtureDef fdef;
     protected Body body;
@@ -27,8 +30,13 @@ public abstract class FloatingObject {
     
     public abstract void update(float dt);
     public abstract void draw(ShapeRenderer sr);
+    
     public Vector2 getPosition() {
         return body.getPosition();
+    }
+    
+    public Body getBody() {
+        return body;
     }
     
 }

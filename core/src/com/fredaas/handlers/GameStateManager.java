@@ -1,6 +1,7 @@
 package com.fredaas.handlers;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.fredaas.states.GameOverState;
 import com.fredaas.states.GameState;
 import com.fredaas.states.MenuState;
 import com.fredaas.states.PlayState;
@@ -35,6 +36,7 @@ public class GameStateManager {
                 ts = new TransitionState(this, new MenuState(this));
                 break;
             case GAMEOVER:
+                ts = new TransitionState(this, new GameOverState(this));
                 break;
             case SCORE:
                 break;

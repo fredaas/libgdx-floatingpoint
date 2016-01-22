@@ -131,7 +131,7 @@ public class PlayState extends GameState {
     private void loadNewState() {
         if (updateTimer()) {
             player.setReady(false);
-            gsm.loadState(State.MENU);
+            gsm.loadState(State.GAMEOVER);
             disposeBodies();
         }
     }
